@@ -22,6 +22,24 @@ const withDB = async (operations, res) => {
    }
 };
 
+app.get('/api/articles', async (req, res) => {
+   const articleName = req.params.name;
+   const operations = async (db) => {
+      const cursor = await db.collection("articles").find( {} );
+
+      if ((await cursor.count()) === 0)
+      {
+         console.log("No documents found!");
+      }
+
+      const articles = await cursor.toArray();
+
+      res.status(200).json(articles);
+   };
+
+   await withDB(operations, res);
+});
+
 app.get('/api/articles/:name', async (req, res) => {
    const articleName = req.params.name;
    const operations = async (db) => {
